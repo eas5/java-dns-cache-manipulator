@@ -24,13 +24,9 @@ public final class DnsCacheEntry implements Serializable {
     }
 
     public String[] getIps() {
-        if (ips != null) {
-            String[] copy = new String[ips.length];
-            System.arraycopy(ips, 0, copy, 0, ips.length); // defensive copy
-            return copy;
-        } else {
-            return null;
-        }
+        String[] copy = new String[ips.length];
+        System.arraycopy(ips, 0, copy, 0, ips.length); // defensive copy
+        return copy;
     }
 
     public String getIp() {
@@ -42,7 +38,7 @@ public final class DnsCacheEntry implements Serializable {
     }
 
     public DnsCacheEntry(String host, String[] ips, Date expiration) {
-        this.host = host;
+        this.host = host.toLowerCase();
         this.ips = ips;
         this.expiration = expiration;
     }
@@ -65,7 +61,7 @@ public final class DnsCacheEntry implements Serializable {
 
         DnsCacheEntry that = (DnsCacheEntry) o;
 
-        if (host != null ? !host.equals(that.host) : that.host != null)
+        if (host != null ? !host.equalsIgnoreCase(that.host) : that.host != null)
             return false;
         if (!Arrays.equals(ips, that.ips)) return false;
         return !(expiration != null ? !expiration.equals(that.expiration) : that.expiration != null);
@@ -73,7 +69,7 @@ public final class DnsCacheEntry implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = host != null ? host.hashCode() : 0;
+        int result = host != null ? host.toLowerCase().hashCode() : 0;
         result = 31 * result + (ips != null ? Arrays.hashCode(ips) : 0);
         result = 31 * result + (expiration != null ? expiration.hashCode() : 0);
         return result;
